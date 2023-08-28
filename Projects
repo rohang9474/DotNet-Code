@@ -1,0 +1,33 @@
+       private void Getentryno()
+        {
+            entryno.Text = "1";
+            string con = "Server=localhost;Database=agri;Uid=root;Charset=utf8";
+            string quer = "SELECT MAX(id) FROM chkpay";
+
+            MySqlConnection myConnection = new MySqlConnection(con);
+            MySqlCommand myCommand = new MySqlCommand(quer, myConnection);
+            myConnection.Open();
+            MySqlDataReader myReader;
+            myReader = myCommand.ExecuteReader();
+
+            try
+            {
+                if (myReader.HasRows)
+                {
+                    while (myReader.Read())
+                    {
+                        int maxId = myReader.GetInt32(0);
+                        int newId = maxId + 1;
+
+                        entryno.Text = newId.ToString();
+                    }
+
+                }
+
+                myReader.Close();
+                myConnection.Close();
+            }
+            catch (Exception r)
+            {
+            }
+         } 
