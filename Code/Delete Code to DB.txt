@@ -1,0 +1,18 @@
+    private void delete_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("Are you sure to delete?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                finalQuery = "";
+                finalQuery = "delete from patient where id='" + tempId + "'";
+                messageBox = "Deleted Successfully";
+                dbOperation();
+            }
+
+            else if (selectedOption == DialogResult.No)
+            {
+
+                MessageBox.Show("Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+        }

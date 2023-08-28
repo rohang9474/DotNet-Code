@@ -1,0 +1,220 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace Textbox_DB
+{
+    public partial class All_TextBox : Form
+    {
+        private MySqlConnection connection;
+        private AutoCompleteStringCollection autoCompleteData;
+
+        private AutoCompleteStringCollection firstnameAutoCompleteData;
+        private AutoCompleteStringCollection lastnameAutoCompleteData;
+        private AutoCompleteStringCollection cityAutoCompleteData;
+        public All_TextBox()
+        {
+            InitializeComponent();
+            InitializeDatabaseConnection();
+            InitializeAutoComplete();
+        }
+
+        private void InitializeDatabaseConnection()
+        {
+            string connectionString = "Server=localhost;Database=info;Uid=root;Charset=utf8";
+
+            // Create a connection to the database
+            connection = new MySqlConnection(connectionString);
+        }
+
+        private void InitializeAutoComplete()
+        {
+            // Create an AutoCompleteStringCollection to hold the suggestions
+            autoCompleteData = new AutoCompleteStringCollection();
+
+            // Retrieve data from the database
+            string query = "SELECT firstname FROM allsugg";
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string suggestion = reader.GetString(0);
+                    autoCompleteData.Add(suggestion);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+          /*
+            // Set up the TextBox with autocomplete
+            firstname.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            firstname.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            firstname.AutoCompleteCustomSource = autoCompleteData; */
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            firstnameAutoCompleteData = new AutoCompleteStringCollection();
+            lastnameAutoCompleteData = new AutoCompleteStringCollection();
+            cityAutoCompleteData = new AutoCompleteStringCollection();
+
+            // Set up the TextBoxes with autocomplete
+            firstname.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            firstname.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            firstname.AutoCompleteCustomSource = firstnameAutoCompleteData;
+
+            lastname.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            lastname.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            lastname.AutoCompleteCustomSource = lastnameAutoCompleteData;
+
+            city.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            city.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            city.AutoCompleteCustomSource = cityAutoCompleteData;
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 
+     }
+
+        private void Submit_Click(object sender, EventArgs e)
+        {
+            String finalQuery = "INSERT INTO `allsugg`(`firstname`, `lastname`, `city`) VALUES ('" + firstname.Text + "', '" + lastname.Text + "', '" + city.Text + "')";
+
+            string con = "Server=localhost;Database=info;Uid=root;Charset=utf8"; ;
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    cmd.Connection = conn;
+                    conn.Open();
+
+                    MySqlDataAdapter mySqlAdapter;
+                    mySqlAdapter = new MySqlDataAdapter(finalQuery, con);
+                    //Method One
+                    DataTable dtb = new DataTable();
+                    mySqlAdapter.Fill(dtb);
+                    //firmtable.DataSource = dtb;
+                    conn.Close();
+                    //this.Hide();
+                    MetroFramework.MetroMessageBox.Show(this, "Added Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshFunction();
+                }
+            }
+        }
+
+        private void RefreshFunction()
+        {
+            firstname.Text = "";
+            lastname.Text = "";
+            city.Text = "";
+        }
+
+        private void firstname_TextChanged(object sender, EventArgs e)
+        {
+            /*string selectedFirstname = firstname.Text.Trim();
+
+            // Retrieve data for other textboxes based on the selected firstname
+            string query = "SELECT lastname, city FROM allsugg WHERE firstname = @selectedFirstname";
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@selectedFirstname", selectedFirstname);
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string lastname = reader.GetString(0);
+                    string city = reader.GetString(1);
+
+                    // Populate the lastname and city textboxes
+                    lastname.Text = lastname;
+                    city.Text = city;
+                }
+                else
+                {
+                    // Clear the lastname and city textboxes if no matching record found
+                    lastname.Text = "";
+                    city.Text = "";
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        } */
+
+            /////////////////////////////////////////////////////////////////////////////////////////////
+
+            string input = firstname.Text.Trim();
+
+    // Clear existing autocomplete items
+    firstnameAutoCompleteData.Clear();
+    lastnameAutoCompleteData.Clear();
+    cityAutoCompleteData.Clear();
+
+    // Retrieve data from the database based on the input
+    string query = "SELECT firstname, lastname, city FROM allsugg WHERE firstname LIKE @input";
+
+    try
+    {
+        connection.Open();
+
+        MySqlCommand command = new MySqlCommand(query, connection);
+        command.Parameters.AddWithValue("@input", "%" + input + "%");
+
+        MySqlDataReader reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            string firstnameValue = reader.GetString(0);
+            string lastnameValue = reader.GetString(1);
+            string cityValue = reader.GetString(2);
+
+            firstnameAutoCompleteData.Add(firstnameValue);
+            lastnameAutoCompleteData.Add(lastnameValue);
+            cityAutoCompleteData.Add(cityValue);
+        }
+
+        reader.Close();
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Error retrieving data: " + ex.Message);
+    }
+    finally
+    {
+        connection.Close();
+    }
+    }
+            /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    }
+}

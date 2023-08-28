@@ -1,0 +1,19 @@
+
+        private void Ledger_Creation_Load(object sender, EventArgs e)
+        {
+           // Max Size Of Page
+            this.WindowState = FormWindowState.Maximized;
+
+           // Center Screen Of Page
+             this.StartPosition = FormStartPosition.CenterScreen;
+
+           // Set Manualy Page Size (hight 100% And Width 70%)
+            this.StartPosition = FormStartPosition.Manual;
+            int desiredWidth = (int)(Screen.PrimaryScreen.WorkingArea.Width * 0.7); // 70% of screen width
+            int desiredHeight = Screen.PrimaryScreen.WorkingArea.Height; // 100% of screen height
+            int desiredX = Screen.PrimaryScreen.WorkingArea.Width - desiredWidth; // Right side
+            int desiredY = 0; // Top
+            this.Size = new Size(desiredWidth, desiredHeight);
+            this.Location = new Point(desiredX, desiredY);
+        }
+

@@ -1,0 +1,60 @@
+public Form1()
+{
+    InitializeComponent();
+    textBox1.TextChanged += textBox1_TextChanged;
+}
+
+               //////// First latter upper Case in textbox  ////////
+
+private void textBox1_TextChanged(object sender, EventArgs e)
+{
+    if (!string.IsNullOrEmpty(textBox1.Text))
+    {
+        string capitalizedText = char.ToUpper(textBox1.Text[0]) + textBox1.Text.Substring(1);
+        textBox1.Text = capitalizedText;
+        textBox1.SelectionStart = textBox1.Text.Length; // Place the cursor at the end
+    }
+}
+
+                  ///////// All latter upper Case in textbox  ////////
+
+private void textBox1_TextChanged(object sender, EventArgs e)
+{
+    if (!string.IsNullOrEmpty(textBox1.Text))
+    {
+        string capitalizedText = textBox1.Text.ToUpper();
+        textBox1.Text = capitalizedText;
+        textBox1.SelectionStart = textBox1.Text.Length; // Place the cursor at the end
+    }
+}
+
+                  //////// First latter upper Case in DataGridView  ////////
+
+private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+{
+    if (e.Value != null && e.ColumnIndex == 0) // Assuming the target column is at index 0
+    {
+        string cellValue = e.Value.ToString();
+        if (!string.IsNullOrEmpty(cellValue))
+        {
+            string capitalizedText = char.ToUpper(cellValue[0]) + cellValue.Substring(1);
+            e.Value = capitalizedText;
+            e.FormattingApplied = true;
+        }
+    }
+}
+
+               //////// All Values are only numbers Case in textbox  ////////
+
+private void textBox1_TextChanged(object sender, EventArgs e)
+{
+    if (!string.IsNullOrEmpty(textBox1.Text))
+    {
+        string numericText = new string(textBox1.Text.Where(char.IsDigit).ToArray());
+        textBox1.Text = numericText;
+        textBox1.SelectionStart = textBox1.Text.Length; // Place the cursor at the end
+    }
+}
+
+
+

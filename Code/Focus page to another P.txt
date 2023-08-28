@@ -1,0 +1,6 @@
+private void button2_Click(object sender, EventArgs e)
+        {
+            // Login successful
+            Form1 form = new Form1();
+            form.Show();
+        }

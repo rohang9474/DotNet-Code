@@ -1,0 +1,72 @@
+try
+            {
+                // Create a new Excel Application
+                Excel.Application excelApp = new Excel.Application();
+
+                // Add a new workbook
+                Excel.Workbook workbook = excelApp.Workbooks.Add(Type.Missing);
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////
+                // Create three sheets with different names
+                Excel.Worksheet sheet1 = (Excel.Worksheet)workbook.Sheets[1];
+                // Fill Sheet1 with some data
+                sheet1.Cells[1, 1] = "Sheet 1 Data";
+                sheet1.Cells[2, 1] = "Value 1";
+                sheet1.Cells[2, 2] = "Value 2";
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////
+                Excel.Worksheet sheet2 = null;
+                if (workbook.Sheets.Count >= 2)
+                {
+                    // Access the second sheet (index 2)
+                    sheet2 = (Excel.Worksheet)workbook.Sheets[2];
+
+                    // Now you can work with sheet2
+                    sheet2.Cells[1, 1] = "Data in Sheet 2";
+                    sheet2.Cells[2, 1] = "Value X";
+                    sheet2.Cells[2, 2] = "Value Y";
+                }
+                else
+                {
+                    // Handle the case when there are not enough sheets in the workbook
+                    MessageBox.Show("There are not enough sheets in the workbook.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                ///////////////////////////////////////////////////////////////////////////////////////////////
+
+                Excel.Worksheet sheet3 = null;
+                if (workbook.Sheets.Count >= 2)
+                {
+                    // Access the second sheet (index 2)
+                    sheet3 = (Excel.Worksheet)workbook.Sheets[3];
+
+                    // Now you can work with sheet2
+                    sheet3.Cells[1, 1] = "Sheet 3 Data";
+                    sheet3.Cells[2, 1] = "Item 1";
+                    sheet3.Cells[2, 2] = "Item 2";
+                    sheet3.Cells[2, 3] = "Item 3";
+                }
+                else
+                {
+                    // Handle the case when there are not enough sheets in the workbook
+                    MessageBox.Show("There are not enough sheets in the workbook.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                // Save the Excel file
+                string filePath = "E:\\yy.xlsx"; // Change the file path as needed
+                workbook.SaveAs(filePath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                                Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+
+                // Close and release resources
+                workbook.Close();
+                excelApp.Quit();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+
+                MessageBox.Show("Excel file with multiple sheets created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message + "\n\n" + ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }

@@ -1,0 +1,10 @@
+private void from_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // Prevents the Enter key from producing a newline character
+
+                // Move focus to the next control in the tab order
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+        }

@@ -1,0 +1,17 @@
+      private void GetState()
+        {
+            string con = "Server=localhost;Database=agri;Uid=root;Charset=utf8";
+            string quer = "select * from state";
+            MySqlConnection myConnection = new MySqlConnection(con);
+            MySqlCommand myCommand = new MySqlCommand(quer, myConnection);
+            myConnection.Open();
+            MySqlDataReader myReader;
+            myReader = myCommand.ExecuteReader();
+            while (myReader.Read())
+            {
+                
+                state.Items.Add(myReader.GetString(1));
+            }
+            myReader.Close();
+            myConnection.Close();
+        }

@@ -1,0 +1,36 @@
+ private void button1_Click(object sender, EventArgs e)
+        {
+
+            string a = credit.Text.Split('-')[0];
+          //  MessageBox.Show(a);
+
+            string b = debit.Text.Split('-')[0];
+            //MessageBox.Show(b);
+            
+
+            String finalQuery = "INSERT INTO `cev`(`date`, `type`, `debit`, `credit`, `remark`, `amount`) VALUES ('" + date.Text + "', '" + type.Text + "', '" + b + "',  '" + a + "',  '" + remark.Text + "', '" + amount.Text +"')";
+
+            string con = "Server=localhost;Database=ulpat;Uid=root;Charset=utf8"; ;
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    cmd.Connection = conn;
+                    conn.Open();
+
+                    MySqlDataAdapter mySqlAdapter;
+                    mySqlAdapter = new MySqlDataAdapter(finalQuery, con);
+                    //Method One
+                    DataTable dtb = new DataTable();
+                    mySqlAdapter.Fill(dtb);
+                    //firmtable.DataSource = dtb;
+                    conn.Close();
+                    //this.Hide();
+                    MetroFramework.MetroMessageBox.Show(this, "Added Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshFunction();
+
+                     ////////////////////////////////////////////////////
+
+                } 
+
+            }

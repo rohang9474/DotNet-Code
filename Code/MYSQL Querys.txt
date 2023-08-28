@@ -1,0 +1,73 @@
+     
+    *MySQL Querys*
+
+1) CREATE DATABASE:
+   CREATE DATABASE your_database_name;
+
+2) DELETE DATABASE:
+   DROP DATABASE your_database_name;
+
+3) CREATE TABLE:
+   CREATE TABLE your_table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+    ...
+    );
+
+4) INSERT: Inserts data into a table.
+   INSERT INTO table_name (column1, column2, ...)
+   VALUES (value1, value2, ...);
+
+5) UPDATE: Modifies existing data in a table.
+   UPDATE table_name
+   SET column1 = value1, column2 = value2, ...
+   WHERE condition;
+
+6) DELETE: Deletes data from a table.
+   DELETE FROM table_name
+   WHERE condition;
+
+7) JOIN: Combines records from two or more tables
+   SELECT columns
+   FROM table1
+   JOIN table2 ON table1.column = table2.column;
+
+8) INNER JOIN: Returns only the matching rows between two tables.
+   SELECT columns
+   FROM table1
+   INNER JOIN table2 ON table1.column = table2.column;
+
+9) LEFT JOIN: Returns all rows from the left table and the matching rows from the right table. 
+   If there is no match, NULL values are returned for the right table columns.
+   SELECT columns
+   FROM table1
+   LEFT JOIN table2 ON table1.column = table2.column;
+
+10) RIGHT JOIN: Returns all rows from the right table and the matching rows from the left table. 
+    If there is no match, NULL values are returned for the left table columns.
+    SELECT columns
+    FROM table1
+    RIGHT JOIN table2 ON table1.column = table2.column;
+
+11) FULL JOIN: Returns all rows from both tables. 
+    If there is no match, NULL values are returned for the columns that don't have a match.
+    SELECT columns
+    FROM table1
+    FULL JOIN table2 ON table1.column = table2.column;
+
+12) column count:
+    SELECT COUNT(Column name) FROM tablename;
+
+   Some of The Most Important SQL Commands
+   SELECT - extracts data from a database
+   UPDATE - updates data in a database
+   DELETE - deletes data from a database
+   INSERT INTO - inserts new data into a database
+   CREATE DATABASE - creates a new database
+   ALTER DATABASE - modifies a database
+   CREATE TABLE - creates a new table
+   ALTER TABLE - modifies a table
+   DROP TABLE - deletes a table
+   CREATE INDEX - creates an index (search key)
+   DROP INDEX - deletes an index

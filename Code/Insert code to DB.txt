@@ -1,0 +1,22 @@
+ private void add_Click(object sender, EventArgs e)
+        {
+            String finalQuery = "INSERT INTO `dosage_inst`(`marathi`, `hindi`, `english`) VALUES ('" + marthi1.Text + "', '" + hindi1.Text + "', '" + english1.Text + "')";
+            string con = "Server=localhost;Database=hospital;Uid=root;Charset=utf8";
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    cmd.Connection = conn;
+                    conn.Open();
+
+                    MySqlDataAdapter mySqlAdapter;
+                    mySqlAdapter = new MySqlDataAdapter(finalQuery, con);
+                    DataTable dtb = new DataTable();
+                    mySqlAdapter.Fill(dtb);
+                    conn.Close();
+                    MetroFramework.MetroMessageBox.Show(this, "Added Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshFunction();
+
+                }
+            }
+        }

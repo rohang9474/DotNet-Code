@@ -1,0 +1,47 @@
+ 
+public static tempId ;
+
+private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
+                tempId = row.Cells[1].Value.ToString();
+
+                if (e.ColumnIndex == 5)
+                {
+                    string newValue = row.Cells[e.ColumnIndex].Value.ToString();
+                    var selectedOption = MessageBox.Show("Are you sure to Update?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                    if (selectedOption == DialogResult.Yes)
+                    {
+                        string con = "Server=localhost;Database=hospital;Uid=root;Charset=utf8";
+                        using (MySqlConnection conn = new MySqlConnection(con))
+                        {
+                            using (MySqlCommand cmd = new MySqlCommand())
+                            {
+                                cmd.Connection = conn;
+                                conn.Open();
+
+                                MySqlDataAdapter mySqlAdapter;
+                                mySqlAdapter = new MySqlDataAdapter("update table_name set name= '" + row.Cells[2].Value.ToString() + "' where id = '" + tempId + "'", con);
+                                DataTable dtb = new DataTable();
+                                mySqlAdapter.Fill(dtb);
+                                conn.Close();
+                                RefreshFunction();
+                                MetroFramework.MetroMessageBox.Show(this, "Updated Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                    }
+
+                    else if (selectedOption == DialogResult.No)
+                    {
+                        MessageBox.Show("Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Operation", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } 
+        }

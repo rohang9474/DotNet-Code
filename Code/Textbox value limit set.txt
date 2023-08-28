@@ -1,0 +1,36 @@
+        public int val = 0;   
+
+      private void mdd_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+            if (char.IsDigit(e.KeyChar))
+            {
+                string currentText = mdd.Text + e.KeyChar;
+
+                if (currentText.Length > 2)
+                {
+                    e.Handled = true;
+                    return;
+                }
+                if (!int.TryParse(currentText, out val) || val > 31)
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
+
+       private void mdd_Validating(object sender, CancelEventArgs e)
+        {
+            if (val < 0 || val > 31)
+            {
+                MessageBox.Show("Please input 0 to 31 only.");
+                mdd.Text = "0";
+                val = 0;
+            }
+        }
+

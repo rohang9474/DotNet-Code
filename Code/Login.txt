@@ -1,0 +1,40 @@
+ private void button1_Click(object sender, EventArgs e)
+        {
+
+            string enteredUsername = userid.Text;
+            string enteredPassword = userpass.Text;
+
+            // Check if any of the textboxes are empty
+            if (string.IsNullOrWhiteSpace(enteredUsername) || string.IsNullOrWhiteSpace(enteredPassword))
+            {
+                MessageBox.Show("Please fill in all the required fields.", "Incomplete Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                // Check if the entered username and password are valid
+                if (IsValidLogin(enteredUsername, enteredPassword))
+                {
+                    // Login successful
+                    Form2 form2 = new Form2();
+                    form2.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    // Login failed
+                    MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+        }
+
+        private bool IsValidLogin(string enteredUsername, string enteredPassword)
+        {
+            // Add your login validation logic here
+            // For example, you can hardcode a username and password for testing purposes
+
+            string validUsername = "admin";
+            string validPassword = "password";
+
+            return (enteredUsername == validUsername && enteredPassword == validPassword);
+        }

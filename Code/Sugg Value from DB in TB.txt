@@ -1,0 +1,24 @@
+    private void GetSugg()
+        {
+            string con = "Server=localhost;Database=hospital;Uid=root;Charset=utf8";
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    conn.Open();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "select * from table_name";
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    AutoCompleteStringCollection MyCollection = new AutoCompleteStringCollection();
+                    while (reader.Read())
+                    {
+                        MyCollection.Add(reader.GetString(1));
+                    }
+                    english1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    english1.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                    english1.AutoCompleteCustomSource = MyCollection;
+                    conn.Close();
+
+                }
+            }
+        }

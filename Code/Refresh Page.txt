@@ -1,0 +1,13 @@
+  private void RefreshFunction()
+        {
+            description.Text = "";
+            accpur.Text = "";
+            percentage.Text = "";
+            gst.Text = "";
+            addless.Text = "";
+            valuation.Text = "";
+            sale.Text = "";
+     
+           // Datagridview Refresh
+            this.dataGridView1.Rows.Clear();
+        }

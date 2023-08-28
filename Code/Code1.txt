@@ -1,0 +1,262 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace DrKarpe
+{
+    public partial class patient_page : Form
+    {
+        public static string postName, userId, tempId;
+        string  finalQuery, messageBox;
+        public patient_page()
+        {
+            InitializeComponent();
+        }
+
+        private void patient_page_Load(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Maximized;
+            postName = dashboard.postName;
+            userId = dashboard.userId;
+            //LoadCategory();
+            
+            string con = "Server=localhost;Database=dr_karpe;Uid=root;Charset=utf8;";
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    conn.Open();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "SELECT * FROM patient";
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    AutoCompleteStringCollection MyCollection = new AutoCompleteStringCollection();
+                    while (reader.Read())
+                    {
+                        MyCollection.Add(reader.GetString(1));
+                    }
+                    name.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    name.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                    name.AutoCompleteCustomSource = MyCollection;
+                    conn.Close();
+                }
+            }
+            RefreshFunction();
+        }
+        private void RefreshFunction()
+        {
+            try
+            {
+
+                this.dataGridView1.Rows.Clear();
+                name.Text = "";
+                address.Text = "";
+                gender.SelectedIndex = 0;
+                mobile.Text = "";
+                occupation.Text = "";
+                address.Text = "";
+                age.Text = "";
+                //cate.SelectedIndex = 0;
+                add.Visible = true;
+                update.Visible = false;
+                delete.Visible = false;
+                string con1 = "Server=localhost;Database=dr_karpe;Uid=root;Charset=utf8;";
+                //string quer = "";
+                //if (textBox1.Text.Length != 0)
+                //{
+                //    MessageBox.Show("ddd");
+                //    quer = "select * from patient";
+                //}
+                //else
+                //{
+                //    quer = "SELECT id, name, age, gender, mobile, occupation, agent FROM patient where name like('%" + search.Text + "%') OR id like('%" + search.Text + "%')OR mobile like('%" + search.Text + "%') OR address like('%" + search.Text + "%') OR agent like('%" + search.Text + "%') OR occupation like('%" + search.Text + "%') OR gender like('%" + search.Text + "%')";
+                //}
+                string quer = "select * from patient where id like('%" + textBox1.Text + "%') OR name like('%" + textBox1.Text + "%') OR age like('%" + textBox1.Text + "%') OR gender like('%" + textBox1.Text + "%') OR mobile like('%" + textBox1.Text + "%') OR occupation like('%" + textBox1.Text + "%') OR address like('%" + textBox1.Text + "%')";
+               // string quer = "SELECT id, name, age, gender, mobile, occupation, agent FROM patient where name like('%" + search.Text + "%') OR id like('%" + search.Text + "%')OR mobile like('%" + search.Text + "%') OR address like('%" + search.Text + "%') OR agent like('%" + search.Text + "%') OR occupation like('%" + search.Text + "%') OR gender like('%" + search.Text + "%')";
+                Console.WriteLine(quer);
+                MySqlConnection myConnection = new MySqlConnection(con1);
+                MySqlCommand myCommand = new MySqlCommand(quer, myConnection);
+                myConnection.Open();
+                MySqlDataReader myReader;
+                myReader = myCommand.ExecuteReader();
+                // Always call Read before accessing data.
+                while (myReader.Read())
+                {
+                    DataGridViewRow row = (DataGridViewRow)dataGridView1.Rows[0].Clone();
+                    row.Cells[0].Value = myReader.GetInt32(0);
+                    row.Cells[1].Value = myReader.GetString(1);
+                    row.Cells[2].Value = myReader.GetString(2);
+                    row.Cells[3].Value = myReader.GetString(3);
+                    row.Cells[4].Value = myReader.GetString(4);
+                    row.Cells[5].Value = myReader.GetString(5);
+                    row.Cells[6].Value = myReader.GetString(6);
+                    row.Cells[7].Value = myReader.GetString(7);
+                    dataGridView1.Rows.Add(row);
+//ddlFruits.Items.Add(new ListItem(myReader.GetString(1)));
+                }
+                // always call Close when done reading.
+                myReader.Close();
+                // Close the connection when done with it.
+                myConnection.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error\n: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        
+
+        private void add_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("Are you sure to add?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            // If the no button was pressed ...
+
+            if (selectedOption == DialogResult.Yes)
+            {
+                finalQuery = "";
+                finalQuery = "insert into patient(name, age, gender, mobile, occupation, address, agent) values (N'" + name.Text + "', N'" + age.Text + "', N'" + gender.Text + "', N'" + mobile.Text + "', N'" + occupation.Text + "', N'" + address.Text + "', N'" + userId + "')";
+                messageBox = "Added Successfully";
+                dbOperation();
+            }
+
+            else if (selectedOption == DialogResult.No)
+            {
+                MetroFramework.MetroMessageBox.Show(this, "Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void dbOperation()
+        {
+            string con = "Server=localhost;Database=dr_karpe;Uid=root;Charset=utf8"; ;
+            using (MySqlConnection conn = new MySqlConnection(con))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    cmd.Connection = conn;
+                    conn.Open();
+
+                    MySqlDataAdapter mySqlAdapter;
+                    mySqlAdapter = new MySqlDataAdapter(finalQuery, con);
+                    //Method One
+                    DataTable dtb = new DataTable();
+                    mySqlAdapter.Fill(dtb);
+                    //firmtable.DataSource = dtb;
+                    conn.Close();
+                    RefreshFunction();
+                    MetroFramework.MetroMessageBox.Show(this, messageBox, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void update_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("Are you sure to update ?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            // If the no button was pressed ...
+
+            if (selectedOption == DialogResult.Yes)
+            {
+                finalQuery = "";
+                //finalQuery = "update itemlist set category='" + cate.Text + "',subcategory='" + subcate.Text + "', agent='" + userId + "' where id='" + tempId + "'";
+                finalQuery = "update patient set name='" + name.Text + "', age = '" + age.Text + "', gender = '" + gender.Text + "', mobile = '" + mobile.Text + "', occupation = '" + occupation.Text + "', address = '" + address.Text + "', agent = '" + userId + "' where id='" + tempId + "'";
+                messageBox = "Updated Successfully";
+                dbOperation();
+            }
+
+            else if (selectedOption == DialogResult.No)
+            {
+
+                MessageBox.Show("Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+        }
+
+        private void delete_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("Are you sure to delete?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            // If the no button was pressed ...
+
+            if (selectedOption == DialogResult.Yes)
+            {
+                finalQuery = "";
+                finalQuery = "delete from patient where id='" + tempId + "'";
+                messageBox = "Deleted Successfully";
+                dbOperation();
+            }
+
+            else if (selectedOption == DialogResult.No)
+            {
+
+                MessageBox.Show("Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            RefreshFunction();
+        }
+
+        private void refresh_Click(object sender, EventArgs e)
+        {
+            RefreshFunction();
+        }
+        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                update.Visible = true;
+                delete.Visible = true;
+                add.Visible = false;
+                DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
+                tempId = row.Cells[0].Value.ToString();
+                //cate.Text = row.Cells[1].Value.ToString();
+                name.Text = row.Cells[1].Value.ToString();
+                age.Text = row.Cells[2].Value.ToString();
+                gender.SelectedItem = row.Cells[3].Value.ToString();
+                mobile.Text = row.Cells[4].Value.ToString();
+                occupation.Text = row.Cells[5].Value.ToString();
+                address.Text = row.Cells[6].Value.ToString();
+                Point ptLowerLeft = new Point(Cursor.Position.X, Cursor.Position.Y);
+                contextMenuStrip1.Show(ptLowerLeft);
+            }
+            else
+            {
+                MessageBox.Show("No Operation", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } 
+        }
+
+        private void treatmentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treartment ap = new treartment();
+            ap.StartPosition = FormStartPosition.CenterScreen;
+            ap.ShowDialog();
+        }
+
+        private void medicineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            medicine ap = new medicine();
+            ap.StartPosition = FormStartPosition.CenterScreen;
+            ap.ShowDialog();
+        }
+
+        private void registartionFeeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Registartion Fee
+            reg_fee ap = new reg_fee();
+            ap.StartPosition = FormStartPosition.CenterScreen;
+            ap.ShowDialog();
+        }
+
+       
+    }
+}

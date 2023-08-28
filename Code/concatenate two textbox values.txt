@@ -1,0 +1,6 @@
+string Value1 = textBox1.Text;
+string Value2 = textBox2.Text;
+
+string finalValue = Value1 + Value2;
+
+string query = "INSERT INTO your_table (combined_column) VALUES ('" + finalValue + "')";

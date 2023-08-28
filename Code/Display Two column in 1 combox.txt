@@ -1,0 +1,23 @@
+
+ private void ComEntry_Voucher_Load(object sender, EventArgs e)
+        {
+            Getcredit();
+         }
+
+ private void Getcredit()
+        {
+            string con = "Server=localhost;Database=agri;Uid=root;Charset=utf8";
+            string quer = "select * from customer";
+            MySqlConnection myConnection = new MySqlConnection(con);
+            MySqlCommand myCommand = new MySqlCommand(quer, myConnection);
+            myConnection.Open();
+            MySqlDataReader myReader;
+            myReader = myCommand.ExecuteReader();
+            while (myReader.Read())
+            {
+                
+                credit.Items.Add(myReader.GetString(0)+"-"+myReader.GetString(1));
+            }
+            myReader.Close();
+            myConnection.Close(); 
+        }

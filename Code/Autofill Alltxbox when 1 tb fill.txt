@@ -1,0 +1,51 @@
+        private void itemname_TextChanged(object sender, EventArgs e)
+        {
+            if (itemname.Text.Length == 0)
+            {
+                RefreshFunction();
+            }
+            else
+            {
+
+                string con = "Server=localhost;Database=agri;Uid=root;Charset=utf8";
+                string quer = "SELECT * FROM product where itemname = '" + itemname.Text + "'";
+
+                MySqlConnection myConnection = new MySqlConnection(con);
+                MySqlCommand myCommand = new MySqlCommand(quer, myConnection);
+                myConnection.Open();
+                MySqlDataReader myReader;
+                myReader = myCommand.ExecuteReader();
+
+                while (myReader.Read())
+                {
+                    id.Text = myReader.GetString(0);
+                    code.Text = myReader.GetString(2);
+                    packing.Text = myReader.GetString(3);
+                    unit.Text = myReader.GetString(4);
+                    wtpk.Text = myReader.GetString(5);
+                    group.Text = myReader.GetString(7);
+                    subgroup.Text = myReader.GetString(8);
+                    company.Text = myReader.GetString(9);
+                    prate.Text = myReader.GetString(10);
+                    srate.Text = myReader.GetString(11);
+                    mrp.Text = myReader.GetString(12);
+                    opqty.Text = myReader.GetString(13);
+                    oppacks.Text = myReader.GetString(14);
+                    minqty.Text = myReader.GetString(15);
+                    stockrate.Text = myReader.GetString(16);
+                    boxsize.Text = myReader.GetString(17);
+                    percd.Text = myReader.GetString(18);
+                    purchaseacc.Text = myReader.GetString(19);
+                    saleacc.Text = myReader.GetString(20);
+                    rate1.Text = myReader.GetString(21);
+                    rate2.Text = myReader.GetString(22);
+                    rate3.Text = myReader.GetString(23);
+                    gst.Text = myReader.GetString(24);
+                    hsn.Text = myReader.GetString(28);
+
+                }
+
+                myReader.Close();
+                myConnection.Close();
+            }
+        }

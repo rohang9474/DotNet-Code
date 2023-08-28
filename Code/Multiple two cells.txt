@@ -1,0 +1,23 @@
+  private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            // Get the row and column indices
+            int Item_RateColumnIndex = 4; // Assuming Item_Rate column is at index 1
+            int quantityColumnIndex = 3; // Assuming Quantity column is at index 2
+            int amountColumnIndex = 6; // Assuming Amount column is at index 3
+
+            if (e.ColumnIndex == Item_RateColumnIndex || e.ColumnIndex == quantityColumnIndex)
+            {
+                // Get the rate and quantity values from the corresponding cells
+                decimal rate = Convert.ToDecimal(dataGridView1.Rows[e.RowIndex].Cells[Item_RateColumnIndex].Value);
+                int quantity = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[quantityColumnIndex].Value);
+
+                // Calculate the amount
+                decimal amount = rate * quantity;
+
+                // Set the calculated amount in the Amount column cell
+                dataGridView1.Rows[e.RowIndex].Cells[amountColumnIndex].Value = amount;
+            }
+
+          
+
+        }

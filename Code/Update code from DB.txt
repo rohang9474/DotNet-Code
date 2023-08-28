@@ -1,0 +1,32 @@
+ private void update_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("Are you sure to update ?", "Action", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            if (selectedOption == DialogResult.Yes)
+            {
+                String finalQuery = "update school set name='" + name.Text + "', mobile='" + mobile.Text + "' where id='" + tempId + "'";
+                string con = "Server=localhost;Database=firstprj;Uid=root;Charset=utf8";
+                using (MySqlConnection conn = new MySqlConnection(con))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand())
+                    {
+                        cmd.Connection = conn;
+                        conn.Open();
+                        MySqlDataAdapter mySqlAdapter;
+                        mySqlAdapter = new MySqlDataAdapter(finalQuery, con);
+                        DataTable dtb = new DataTable();
+                        mySqlAdapter.Fill(dtb);
+                        conn.Close();
+                        MetroFramework.MetroMessageBox.Show(this, "Updated Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        RefreshFunction();
+                    }
+                }
+            }
+
+            else if (selectedOption == DialogResult.No)
+            {
+
+                MessageBox.Show("Something is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+        }
